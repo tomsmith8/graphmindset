@@ -117,6 +117,26 @@ async function payViaWebLN(
   }
 }
 
+export type TopUpResponse = {
+  success: boolean
+  payment_request: string
+  payment_hash: string
+}
+
+export async function topUpLsat(
+  macaroon: string,
+  amount: number
+): Promise<TopUpResponse> {
+  return api.post<TopUpResponse>("/top_up_lsat", { macaroon, amount })
+}
+
+export async function topUpConfirm(
+  paymentHash: string,
+  macaroon: string
+): Promise<void> {
+  await api.post("/top_up_confirm", { payment_hash: paymentHash, macaroon })
+}
+
 export async function getPrice(endpoint: string): Promise<number> {
   try {
     const res = await api.get<{
